@@ -1,14 +1,10 @@
 import os
-
-
-lstToDo = []
-lstCompleted = []
 while True:
     print("Let's help with your TO DOs\n")
     print("Enter- Menu -to show menu")
 
-    promt = input("What do you want to do:")
-    if promt.__contains__("Menu"):
+    prompt = input("What do you want to do:")
+    if prompt.__contains__("Menu"):
         print("""
             Enter= 'Menu' -to show menu.
             Enter- 'Show' -to show a task.
@@ -20,37 +16,83 @@ while True:
             Enter- 'Exit' -to exit the app.
             """)
 
-    elif promt.__contains__("Add"):
-        task = input("Enter your task: ")
-        lstToDo.append(task)
+    elif prompt.__contains__("Add"):
+        finish = 1
+        while True:
+            task = input("Enter your task or Done to finish: ")
+            if task == "Done":
+                break
+            with open("To_Do.txt", 'a') as file:
+                file.write(f"{task}\n")
 
-    elif promt.__contains__("Show"):
+    elif prompt.__contains__("Show"):
         print("These a the tasks that are listed:")
+        with open("To_Do.txt", 'r') as file:
+            lstToDo = list(file.readlines())
         for index, task in enumerate(lstToDo):
-            print(f"{index+1}- {task}.")
+            print(f"{index+1}- {task.rstrip("\n")}")
 
-    elif promt.__contains__("Edit"):
-        taskEditNo = int(input("Enter the task number to edit: "))
-        edited = input("Enter the new edited task: ")
-        lstToDo[taskEditNo-1] = edited
+    elif prompt.__contains__("Edit"):
+        with open("To_Do.txt", 'r') as file:
+            lstToDo = list(file.readlines())
+        while True:
+            taskEditNo = int(input(
+                "Enter the task number to edit & 0 to exit: "))
+            if taskEditNo == 0:
+                break
+            else:
+                edited = input("Enter the new edited task: ")
+                lstToDo[taskEditNo-1] = edited+"\n"
+                for task in lstToDo:
+                    with open("To_Do.txt", 'w+' ) as file:
+                        file.write(f"{task}")
 
-    elif promt.__contains__("Mark-Complete"):
-        completdTaskNo = int(input("Enter the completed task number: "))
-        completeTask = lstToDo.pop(completdTaskNo-1)
-        lstCompleted.append(completeTask)
-        print(f"This {completeTask} has been completed.")
+    elif prompt.__contains__("Mark-Complete"):
+        with open("To_Do.txt", 'r') as file:
+            lstToDo = list(file.readlines())
 
-    elif promt.__contains__("Completed-Tasks"):
+        completedTaskNo = int(input(
+                "Enter the completed task number: "))
+
+        completeTask = lstToDo.pop(completedTaskNo - 1)
+        print(lstToDo)
+        for task in lstToDo:
+            with open("To_Do.txt", 'w+' ) as file:
+                file.write(f"{task}")
+                print(task)
+        with open("Completed_To_Do.txt", 'a' ) as file:
+            file.write(f"{completeTask}\n")
+            print(f"This {completeTask} task has been completed.")
+
+    elif prompt.__contains__("Completed-Tasks"):
         print("These are the completed tasks:")
+        with open("Completed_To_Do.txt", 'r') as file:
+            lstCompleted = list(file.readlines())
         for index, task in enumerate(lstCompleted):
             print(f"{index}- {task}.")
+        action = input("Enter- Clear - to clean tasks or- "
+                       "Exit -to exit")
+        if action.__contains__("Clear"):
+            with open("Completed_To_Do.txt", 'w') as file:
+               print("Successfully cleared")
+        elif action.__contains__("Exit"):
+            continue
 
-    elif promt.__contains__("Delete"):
-        taskDelete = int(input("Enter the task number to delete: "))
-        deleteTask = lstToDo.pop(taskDelete-1)
-        print(f"You deleted {deleteTask} task successfully.")
+    elif prompt.__contains__("Delete"):
+        while True:
+            with open("To_Do.txt", 'r') as file:
+                lstToDo = list(file.readlines())
+            taskDelete = int(input("Enter the task number to delete: "))
+            if taskDelete == 0:
+                break
+            else:
+                deleteTask = lstToDo.pop(taskDelete-1)
+                for task in lstToDo:
+                    with open("To_Do.txt", 'w+' ) as file:
+                        file.write(f"{task}")
+                print(f"You deleted {deleteTask} task successfully.")
 
-    elif promt.__contains__("Exit"):
+    elif prompt.__contains__("Exit"):
         break
 
 
