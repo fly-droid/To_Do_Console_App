@@ -50,19 +50,18 @@ while True:
     elif prompt.__contains__("Mark-Complete"):
         with open("To_Do.txt", 'r') as file:
             lstToDo = list(file.readlines())
-
-        completedTaskNo = int(input(
+        completedTaskNo   = int(input(
                 "Enter the completed task number: "))
-
         completeTask = lstToDo.pop(completedTaskNo - 1)
-        print(lstToDo)
-        for task in lstToDo:
+        if completedTaskNo <= 1:
             with open("To_Do.txt", 'w+' ) as file:
-                file.write(f"{task}")
-                print(task)
-        with open("Completed_To_Do.txt", 'a' ) as file:
-            file.write(f"{completeTask}\n")
-            print(f"This {completeTask} task has been completed.")
+                 file.writelines(lstToDo)
+
+            with open("Completed_To_Do.txt", 'a' ) as file:
+                file.write(f"{completeTask}\n")
+                print(f"This {completeTask} task has been completed.")
+        else:
+            print("That not a valid task number please try again.")
 
     elif prompt.__contains__("Completed-Tasks"):
         print("These are the completed tasks:")
