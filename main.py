@@ -3,7 +3,7 @@ while True:
     print("Let's help with your TO DOs\n")
     print("Enter- Menu -to show menu")
 
-    prompt = input("What do you want to do:")
+    prompt = input("What do you want to do: ")
     if prompt.__contains__("Menu"):
         print("""
             Enter= 'Menu' -to show menu.
@@ -26,7 +26,7 @@ while True:
                 file.write(f"{task}\n")
 
     elif prompt.__contains__("Show"):
-        print("These a the tasks that are listed:")
+        print("These a the tasks that are listed: ")
         with open("To_Do.txt", 'r') as file:
             lstToDo = list(file.readlines())
         for index, task in enumerate(lstToDo):
@@ -43,9 +43,8 @@ while True:
             else:
                 edited = input("Enter the new edited task: ")
                 lstToDo[taskEditNo-1] = edited+"\n"
-                for task in lstToDo:
-                    with open("To_Do.txt", 'w+' ) as file:
-                        file.write(f"{task}")
+                with open("To_Do.txt", 'w+' ) as file:
+                    file.writelines(lstToDo)
 
     elif prompt.__contains__("Mark-Complete"):
         with open("To_Do.txt", 'r') as file:
@@ -53,13 +52,14 @@ while True:
         completedTaskNo   = int(input(
                 "Enter the completed task number: "))
         completeTask = lstToDo.pop(completedTaskNo - 1)
-        if completedTaskNo <= 1:
+        if completedTaskNo >= 1:
             with open("To_Do.txt", 'w+' ) as file:
                  file.writelines(lstToDo)
 
             with open("Completed_To_Do.txt", 'a' ) as file:
-                file.write(f"{completeTask}\n")
-                print(f"This {completeTask} task has been completed.")
+                file.write(f"{completeTask}")
+                print(f"This {completeTask.strip("\n")} "
+                      f"task has been completed.")
         else:
             print("That not a valid task number please try again.")
 
@@ -68,12 +68,22 @@ while True:
         with open("Completed_To_Do.txt", 'r') as file:
             lstCompleted = list(file.readlines())
         for index, task in enumerate(lstCompleted):
-            print(f"{index}- {task}.")
-        action = input("Enter- Clear - to clean tasks or- "
-                       "Exit -to exit")
+            print(f"{index+1}- {task.strip("\n")}.")
+        action = input("Enter- Clear - to clean tasks, "
+                       "- Restore - to restore task or- "
+                       "Exit -to exit: ")
         if action.__contains__("Clear"):
             with open("Completed_To_Do.txt", 'w') as file:
                print("Successfully cleared")
+        elif action.__contains__("Restore"):
+            restore = input("Enter the numbers of tasks to "
+                            "restore with nothing between them: ")
+            for index in restore:
+                restore_task = lstCompleted.pop(int(index)-1)
+                with open("To_Do.txt", 'a') as file:
+                    file.write(f"{restore_task}")
+                print(f"{index}- {restore_task}")
+            print("Restoration successfully!")
         elif action.__contains__("Exit"):
             continue
 
